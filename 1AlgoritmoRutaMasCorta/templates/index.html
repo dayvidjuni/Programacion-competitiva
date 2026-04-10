@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Enrutamiento Óptimo Perú</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <style>
+        body { margin: 0; padding: 0; font-family: Arial, sans-serif; display: flex; height: 100vh; }
+        #sidebar { width: 350px; background-color: #f8f9fa; padding: 20px; box-shadow: 2px 0 5px rgba(0,0,0,0.1); z-index: 1000; overflow-y: auto; }
+        #map { flex-grow: 1; height: 100%; }
+        .form-group { margin-bottom: 15px; }
+        label { display: block; margin-bottom: 5px; font-weight: bold; }
+        select, button { width: 100%; padding: 10px; border-radius: 4px; border: 1px solid #ccc; }
+        button { background-color: #0d6efd; color: white; border: none; cursor: pointer; font-weight: bold; margin-top: 10px; }
+        button:hover { background-color: #0b5ed7; }
+        #resultPanel { margin-top: 20px; padding: 15px; background-color: white; border: 1px solid #dee2e6; border-radius: 4px; display: none; }
+    </style>
+</head>
+<body>
+    <div id="sidebar">
+        <h2>Ruta Más Óptima</h2>
+        <div class="form-group">
+            <label for="startNode">Origen:</label>
+            <select id="startNode"></select>
+        </div>
+        <div class="form-group">
+            <label for="endNode">Destino:</label>
+            <select id="endNode"></select>
+        </div>
+        <button id="calcBtn">Encontrar camino</button>
+        <div id="resultPanel">
+            <h3 style="margin-top: 0;">Detalles de la Ruta</h3>
+            <p id="pathText"></p>
+            <p><strong style="font-size: 1.2em;">Distancia total = <span id="distText"></span> KM</strong></p>
+        </div>
+    </div>
+    <div id="map"></div>
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script>
+        const departments = [
+            "Amazonas", "Ancash", "Apurimac", "Arequipa", "Ayacucho", "Cajamarca", "Callao", 
+            "Cusco", "Huancavelica", "Huanuco", "Ica", "Junin", "La Libertad", "Lambayeque", 
+            "Lima", "Loreto", "Madre de Dios", "Moquegua", "Pasco", "Piura", "Puno", 
+            "San Martin", "Tacna", "Tumbes", "Ucayali"
+        ];
+
+        const startSelect = document.getElementById('startNode');
+        const endSelect = document.getElementById('endNode');
+        
+        departments.forEach(city => {
+            startSelect.add(new Option(city, city));
+            endSelect.add(new Option(city, city));
+        });
+
+        const map = L.map('map').setView([-9.19, -75.01], 6);
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
+        
+        let currentPolyline = null;
+        let markersLayer = L.layerGroup().addTo(map);
+
+        document.getElementById('calcBtn').addEventListener('click', async () => {
+            const start = startSelect.value;
+            const end = endSelect.value;
+            
+            const response = await fetch('/calculate', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ start: start, end: end })
+            });
+            
+            const result = await response.json();
+            
+            if (currentPolyline) map.removeLayer(currentPolyline);
+            markersLayer.clearLayers();
+
+            const resultPanel = document.getElementById('resultPanel');
+            const pathText = document.getElementById('pathText');
+            const distText = document.getElementById('distText');
+
+            if (result.path.length > 0) {
+                let coords = result.coordinates.map(p => [p.lat, p.lon]);
+                
+                currentPolyline = L.polyline(coords, { color: '#ff4444', weight: 5 }).addTo(map);
+                
+                result.coordinates.forEach(p => {
+                    L.circleMarker([p.lat, p.lon], { radius: 6, color: '#2b5797', fillColor: '#fff', fillOpacity: 1, weight: 2 })
+                     .bindPopup(`<b>${p.name}</b>`).addTo(markersLayer);
+                });
+
+                map.fitBounds(currentPolyline.getBounds(), {padding: [50, 50]});
+
+                pathText.innerHTML = result.path.join('<br>↓<br>');
+                distText.textContent = result.distance;
+                resultPanel.style.display = 'block';
+            } else {
+                pathText.innerHTML = "No se encontró ruta.";
+                distText.textContent = "0";
+                resultPanel.style.display = 'block';
+            }
+        });
+    </script>
+</body>
+</html>
