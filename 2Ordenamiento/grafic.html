@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Explorador de Arquitectura de Sistemas - Revisión</title>
+    <style>
+        :root {
+            --primary: #0284c7;
+            --secondary: #f0f9ff;
+            --text-dark: #0f172a;
+            --text-light: #64748b;
+            --border: #cbd5e1;
+            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f8fafc;
+            color: var(--text-dark);
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .dashboard {
+            max-width: 1050px;
+            width: 100%;
+            background: white;
+            border-radius: 12px;
+            box-shadow: var(--shadow);
+            padding: 30px;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px solid var(--border);
+            padding-bottom: 20px;
+            margin-bottom: 30px;
+        }
+
+        h1 {
+            margin: 0;
+            font-size: 24px;
+            color: var(--text-dark);
+        }
+
+        select {
+            padding: 10px 15px;
+            font-size: 16px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            background-color: white;
+            cursor: pointer;
+            outline: none;
+            font-weight: 600;
+            color: var(--primary);
+        }
+
+        .section-title {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            color: var(--text-dark);
+            border-left: 4px solid var(--primary);
+            padding-left: 10px;
+        }
+
+        /* IPO Diagram Styles */
+        .ipo-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: stretch;
+            background: var(--secondary);
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+            gap: 15px;
+        }
+
+        .ipo-box {
+            flex: 1;
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 15px;
+            text-align: left;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+        }
+
+        .ipo-box h3 {
+            margin-top: 0;
+            color: var(--primary);
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 10px;
+            text-align: center;
+        }
+
+        .ipo-arrow {
+            display: flex;
+            align-items: center;
+            font-size: 24px;
+            color: var(--text-light);
+            font-weight: bold;
+        }
+
+        .list-items {
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .list-items li {
+            padding: 6px 0;
+            font-size: 13.5px;
+            border-bottom: 1px dashed var(--border);
+        }
+        .list-items li:last-child { border-bottom: none; }
+
+        /* Variables & Systems Grid */
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+        }
+
+        .card {
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+        }
+
+        .var-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+
+        .var-item {
+            background: var(--secondary);
+            padding: 10px;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .tag-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .tag {
+            background: #e0e7ff;
+            color: #3730a3;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 600;
+        }
+        
+        .tag.macro {
+            background: #dcfce7;
+            color: #166534;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="dashboard">
+        <div class="header">
+            <h1>Análisis General de Sistemas</h1>
+            <select id="entitySelector" onchange="updateDashboard()">
+                <option value="una">UNA-Puno</option>
+                <option value="essalud">EsSalud</option>
+                <option value="quipu">Quipu SDMS</option>
+            </select>
+        </div>
+
+        <h2 class="section-title">1. Diagrama I.P.O. (Agrupado por Categorías)</h2>
+        <div class="ipo-container">
+            <div class="ipo-box">
+                <h3>Entradas (Insumos Globales)</h3>
+                <ul class="list-items" id="ipo-inputs"></ul>
+            </div>
+            <div class="ipo-arrow">➔</div>
+            <div class="ipo-box">
+                <h3>Procesos</h3>
+                <ul class="list-items" id="ipo-processes"></ul>
+            </div>
+            <div class="ipo-arrow">➔</div>
+            <div class="ipo-box">
+                <h3>Salidas</h3>
+                <ul class="list-items" id="ipo-outputs"></ul>
+            </div>
+        </div>
+
+        <div class="grid-2">
+            <div class="card">
+                <h2 class="section-title">2. Variables del Sistema</h2>
+                <div class="var-grid" id="variables-list"></div>
+            </div>
+
+            <div class="card">
+                <h2 class="section-title">3. Jerarquía de Sistemas</h2>
+                
+                <h4 style="margin: 0 0 10px 0; color: var(--text-light);">Macrosistemas (Entorno superior)</h4>
+                <div class="tag-container" id="macro-list" style="margin-bottom: 20px;"></div>
+
+                <h4 style="margin: 0 0 10px 0; color: var(--text-light);">Microsistemas (Subsistemas internos)</h4>
+                <div class="tag-container" id="micro-list"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const data = {
+            una: {
+                inputs: [
+                    "<b>R. Humanos:</b> Ingresantes, Docentes, Administrativos", 
+                    "<b>R. Financieros:</b> Presupuesto estatal, Recursos Propios (RDR)", 
+                    "<b>R. Materiales:</b> Aulas, Laboratorios, Equipos, Bibliotecas", 
+                    "<b>R. Información:</b> Ley Universitaria, Mallas Curriculares"
+                ],
+                processes: ["Enseñanza y aprendizaje", "Investigación formativa y científica", "Extensión y proyección social", "Gestión académica y administrativa"],
+                outputs: ["Profesionales y posgraduados titulados", "Investigaciones y artículos científicos", "Proyectos de desarrollo social", "Servicios a la comunidad"],
+                variables: ["Tasa de matriculación", "Presupuesto Ejecutado", "Ratio Docente/Estudiante", "Producción Científica Indexada", "Índice de Retención/Graduación", "Capacidad de Infraestructura"],
+                macro: ["Sistema Educativo Peruano (MINEDU)", "SUNEDU", "Gobierno Regional y Sociedad de Puno"],
+                micro: ["Facultades y Escuelas Profesionales", "Vicerrectorados (Académico e Investigación)", "Dirección de Admisión", "Bienestar Universitario", "Biblioteca Central"]
+            },
+            essalud: {
+                inputs: [
+                    "<b>R. Humanos:</b> Personal Médico, Asistencial y Administrativo", 
+                    "<b>R. Financieros:</b> Aportes patronales de empresas", 
+                    "<b>R. Materiales:</b> Infraestructura hospitalaria, Equipos médicos, Insumos/Medicinas", 
+                    "<b>R. Información:</b> Pacientes con dolencias (Estado inicial), Historias Clínicas"
+                ],
+                processes: ["Triage y diagnóstico médico", "Tratamiento e intervenciones quirúrgicas", "Rehabilitación y Terapia", "Gestión logística y farmacéutica"],
+                outputs: ["Pacientes recuperados o estabilizados", "Historias clínicas actualizadas", "Certificados de descanso médico", "Prevención epidemiológica"],
+                variables: ["Población Activa Asegurada", "Tiempo de Espera Promedio (Citas/Cirugías)", "Porcentaje de Abastecimiento de Farmacia", "Nivel de Ocupación de Camas", "Costo Operativo por Paciente", "Tasa de Morbilidad/Mortalidad"],
+                macro: ["Sector Salud del Perú (MINSA)", "Ministerio de Trabajo (MTPE)", "SUSALUD"],
+                micro: ["Redes Asistenciales (Hospitales, Policlínicos)", "Unidades de Emergencia y UCI", "Centro Quirúrgico", "Farmacia y Logística", "Recursos Humanos"]
+            },
+            quipu: {
+                inputs: [
+                    "<b>R. Humanos:</b> Desarrolladores, QA, Project Managers", 
+                    "<b>R. Financieros:</b> Capital operativo, Presupuesto del cliente", 
+                    "<b>R. Tecnológicos:</b> Hardware, Servidores (Cloud/Local), Licencias de Software", 
+                    "<b>R. Información:</b> Requerimientos del negocio, Feedback del cliente"
+                ],
+                processes: ["Levantamiento y análisis de requerimientos", "Diseño de arquitectura de software", "Programación e integración (Metodologías)", "Pruebas de calidad y seguridad", "Despliegue y paso a producción"],
+                outputs: ["Sistemas de software a medida", "Documentación (Manuales, Arquitectura)", "Código fuente versionado", "Servicio de mantenimiento y soporte"],
+                variables: ["Velocidad del Equipo (Story Points)", "Densidad de Defectos (Bugs)", "Costo de Adquisición de Cliente (CAC)", "Tasa de Retención de Clientes (Churn)", "Horas-Hombre Facturables", "Nivel de Deuda Técnica"],
+                macro: ["Industria Tecnológica Global", "Mercado Empresarial Local/Nacional", "Marco Regulatorio Digital y Tributario (SUNAT)"],
+                micro: ["Área de Desarrollo (Frontend/Backend)", "Aseguramiento de Calidad (QA)", "Gestión de Proyectos y Producto", "Infraestructura de TI (DevOps)", "Comercial y Soporte Técnico"]
+            }
+        };
+
+        function renderList(elementId, items) {
+            const el = document.getElementById(elementId);
+            el.innerHTML = items.map(item => `<li>• ${item}</li>`).join('');
+        }
+
+        function renderVariables(elementId, items) {
+            const el = document.getElementById(elementId);
+            el.innerHTML = items.map(item => `<div class="var-item">${item}</div>`).join('');
+        }
+
+        function renderTags(elementId, items, isMacro = false) {
+            const el = document.getElementById(elementId);
+            const className = isMacro ? 'tag macro' : 'tag';
+            el.innerHTML = items.map(item => `<span class="${className}">${item}</span>`).join('');
+        }
+
+        function updateDashboard() {
+            const selected = document.getElementById('entitySelector').value;
+            const entity = data[selected];
+
+            renderList('ipo-inputs', entity.inputs);
+            renderList('ipo-processes', entity.processes);
+            renderList('ipo-outputs', entity.outputs);
+            
+            renderVariables('variables-list', entity.variables);
+            
+            renderTags('macro-list', entity.macro, true);
+            renderTags('micro-list', entity.micro, false);
+        }
+
+        window.onload = updateDashboard;
+    </script>
+</body>
+</html>
