@@ -176,7 +176,7 @@ void printArray(int arr[], int n) {
     cout << "]\n";
 }
 
-void evaluateAndDisplay(int base_arr[], int amount, string scenario) {
+void evaluateAndDisplay(int base_arr[], int amount) {
     string names[6] = {"Bubble Sort", "Selection Sort", "Insertion Sort", "Quick Sort", "Shell Sort", "Heap Sort"};
     int steps[6] = {0, 0, 0, 0, 0, 0};
     int times[6] = {0, 0, 0, 0, 0, 0};
@@ -252,7 +252,7 @@ void evaluateAndDisplay(int base_arr[], int amount, string scenario) {
         }
     }
 
-    cout << "\n=== STATISTICS: " << scenario << " ===\n";
+    cout << "\n=== STATISTICS ===\n";
     for (int i = 0; i < 6; i++) {
         if (i == 0) cout << "[1ST PLACE] ";
         else cout << "Position " << (i + 1) << ": ";
@@ -292,8 +292,6 @@ int main() {
     uniform_int_distribution<> dist(min_val, max_val);
 
     int* random_array = new int[amount];
-    int* sorted_array = new int[amount];
-    int* reverse_array = new int[amount];
     
     for (int i = 0; i < amount; i++) {
         random_array[i] = dist(gen);
@@ -305,28 +303,12 @@ int main() {
 
     if (choice != 'y' && choice != 'Y') {
         delete[] random_array;
-        delete[] sorted_array;
-        delete[] reverse_array;
         return 0;
     }
 
-    evaluateAndDisplay(random_array, amount, "Random Array (Average Case)");
-
-    copyArray(random_array, sorted_array, amount);
-    int dummy = 0; 
-    quickSortRecursive(sorted_array, 0, amount - 1, dummy); 
-    
-    evaluateAndDisplay(sorted_array, amount, "Already Sorted Array (Best General Case)");
-
-    for(int i = 0; i < amount; i++) {
-        reverse_array[i] = sorted_array[amount - 1 - i];
-    }
-    
-    evaluateAndDisplay(reverse_array, amount, "Reversely Sorted Array (Worst General Case)");
+    evaluateAndDisplay(random_array, amount);
 
     delete[] random_array;
-    delete[] sorted_array;
-    delete[] reverse_array;
 
     system("pause");
     return 0;
