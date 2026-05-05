@@ -12,12 +12,13 @@ git clone https://github.com/dayvidjuni/Programacion-competitiva
 g++ main.cpp -o comparador
 
 # 3. Ejecutar el programa
-# En Windows:
+
+## En Windows:
 comparador.exe
 
-# En Linux o macOS:
+## En Linux o macOS:
 ./comparador
-3. Ejemplos de Ejecución
+# 4. Ejemplos de Ejecución
 A continuación se presentan dos escenarios reales de ejecución del programa.
 Ejemplo 1: Evaluación básica con 6 elementos (Rango positivo)
 Enter the amount of numbers to generate: 6
