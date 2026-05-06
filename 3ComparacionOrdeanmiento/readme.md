@@ -8,7 +8,7 @@ Finalmente, se muestra una tabla de clasificación ordenada de menor a mayor seg
 También se incluye la cantidad de pasos operacione realizados por cada algoritmo y el array final ordenado de cada uno de ellos.
 
 # 2. Instrucciones: Cómo compilar y correr el programa
-Para ejecutar este código, es necesario tener instalado un compilador de C++ (por ejemplo, GCC/g++).
+Para ejecutar este código, es necesario tener instalado un compilador de C++.
 ## 1. Clonar el repositorio
 git clone https://github.com/dayvidjuni/Programacion-competitiva
 
