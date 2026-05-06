@@ -20,12 +20,17 @@ comparador.exe
 ./comparador
 # 4. Ejemplos de Ejecución
 A continuación se presentan dos escenarios reales de ejecución del programa.
-Ejemplo 1: Evaluación básica con 6 elementos (Rango positivo)
+
+## Ejemplo 1: Evaluación básica con 6 elementos (Rango positivo)
+
 Enter the amount of numbers to generate: 6
+
 Enter the range of numbers (minimum and maximum): 1 50
+
 Do you want to continue and see the comparison? (y/n): y
 
 === STATISTICS ===
+
 [1ST PLACE] Insertion Sort | Steps: 22  | Time: 400 ns
 Sorted Array: [ 4 12 19 33 41 48 ]
 
@@ -44,12 +49,16 @@ Sorted Array: [ 4 12 19 33 41 48 ]
 Position 6: Heap Sort      | Steps: 54  | Time: 1200 ns
 Sorted Array: [ 4 12 19 33 41 48 ]
 
-Ejemplo 2: Evaluación con un rango mixto (negativos y positivos, 10 elementos)
+## Ejemplo 2: Evaluación con un rango mixto (negativos y positivos, 10 elementos)
+
 Enter the amount of numbers to generate: 10
+
 Enter the range of numbers (min and max): -50 50
+
 Do you want to continue and see the comparison? (y/n): y
 
 === STATISTICS ===
+
 [1ST PLACE] Quick Sort     | Steps: 65  | Time: 900 ns
 Sorted Array: [ -45 -30 -12 -5 0 8 19 25 38 49 ]
 
