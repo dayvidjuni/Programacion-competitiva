@@ -1,24 +1,28 @@
-1. Descripción del Proyecto
+# 1. Descripción del Proyecto
+
 Este programa desarrollado en C++ permite evaluar y comparar la eficiencia de seis algoritmos de ordenamiento clásicos: Bubble Sort, Selection Sort, Insertion Sort, Quick Sort, Shell Sort y Heap Sort.
+
 El usuario ingresa la cantidad de números a generar y el rango de estos. El programa genera un array aleatorio y procede a ordenar los datos utilizando cada uno de los algoritmos.
 Finalmente, se muestra una tabla de clasificación ordenada de menor a mayor según el tiempo de ejecución medido en nanosegundos.
+
 También se incluye la cantidad de pasos operacione realizados por cada algoritmo y el array final ordenado de cada uno de ellos.
-3. Instrucciones: Cómo compilar y correr el programa
+
+# 2. Instrucciones: Cómo compilar y correr el programa
 Para ejecutar este código, es necesario tener instalado un compilador de C++ (por ejemplo, GCC/g++).
-# 1. Clonar el repositorio
+## 1. Clonar el repositorio
 git clone https://github.com/dayvidjuni/Programacion-competitiva
 
-# 2. Compilar el código fuente
+## 2. Compilar el código fuente
 g++ main.cpp -o comparador
 
-# 3. Ejecutar el programa
+## 3. Ejecutar el programa
 
-## En Windows:
+### En Windows:
 comparador.exe
 
-## En Linux o macOS:
+### En Linux:
 ./comparador
-# 4. Ejemplos de Ejecución
+# 3. Ejemplos de Ejecución
 A continuación se presentan dos escenarios reales de ejecución del programa.
 
 ## Ejemplo 1: Evaluación básica con 6 elementos (Rango positivo)
